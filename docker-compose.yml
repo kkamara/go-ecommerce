@@ -1,0 +1,74 @@
+version: '3.9'
+
+services:
+  app:    
+    container_name: my-app
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    environment: 
+      REDIS_URL: redis:6379   
+      APP_PORT: 8080
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS} 
+    volumes:
+        - './:/app'
+    ports:
+      - "${APP_PORT:-80}:8080" 
+    restart: unless-stopped
+    depends_on: 
+      - redis 
+      - mysql
+    networks: 
+      - app  
+  redis:
+    container_name: my-redis
+    image: "redis:alpine" 
+    restart: unless-stopped
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'redis:/data'
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+  mysql:
+    container_name: my-db
+    image: 'mysql:8.0'
+    restart: unless-stopped
+    ports:
+      - '${DB_PORT:-3306}:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'db:/docker-entrypoint-initdb.d'
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p${DB_PASS}"]
+  selenium:
+    container_name: my-selenium
+    image: 'selenium/standalone-chrome'
+    ports:
+        - '${SELENIUM_PORT:-4000}:4444'
+    volumes:
+        - '/dev/shm:/dev/shm'
+    networks:
+        - app
+
+volumes:
+  redis:
+    driver: local
+  db:
+    driver: local
+
+networks:
+  app:    
+    driver: bridge
