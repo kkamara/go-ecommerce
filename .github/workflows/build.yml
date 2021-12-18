@@ -1,0 +1,55 @@
+name: Run CI
+
+on: [push, pull_request]
+
+jobs:
+  ecommerce:
+    name: pipeline (GO ${{ matrix.go-versions }})
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: 'secret'
+          MYSQL_DATABASE: 'app'
+          MYSQL_USER: 'user'
+          MYSQL_PASSWORD: 'secret'
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      fail-fast: false
+      matrix:
+        go-versions: ['1.17']
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.5
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Fetch required Go modules
+        run:  go mod download
+      - name: Setup Env Variables
+        run: |
+            cp .env.example .env
+            sed -i -e "s/APP_URL=http:\/\/localhost/APP_URL=http:\/\/127.0.0.1:8000/g" .env
+            sed -i -e "s/3306/${{ job.services.mysql.ports['3306'] }}/g" .env
+            sed -i -e "s/DB_HOST=mysql/DB_HOST=127.0.0.1/g" .env
+            sed -i -e "s/APP_PORT=80/APP_PORT=8000/g" .env
+            sed -i -e "s/SELENIUM_PORT=4000/SELENIUM_PORT=9515/g" .env
+            sed -i -e "s/development/testing/g" .env
+      - name: Run web server
+        run: go run -mod=readonly main.go &
+      - name: curl to localhost
+        run: curl localhost:8000 &
+      - name: Make vendor directory
+        run: mkdir vendor/
+      - name: Get test binaries
+        run: go run -mod=readonly main.go download
+      - name: Unzip test binaries
+        run: cd vendor && unzip chromedriver.zip
+      - name: Start Chrome Driver
+        run: vendor/chromedriver &
+      - name: Run browser tests
+        run:  cd tests && go test -mod=readonly -v

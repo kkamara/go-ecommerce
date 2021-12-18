@@ -5,11 +5,19 @@ import (
 	"os"
 	"testing"
 
+	"github.com/joho/godotenv"
 	"github.com/tebeka/selenium"
 	"github.com/tebeka/selenium/chrome"
 )
 
 func TestExample(t *testing.T) {
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	godotenv.Load(currentDir + "/../.env")
 
 	// Connect to the WebDriver instance running locally.
 	caps := selenium.Capabilities{"browserName": "chrome"}
@@ -22,7 +30,16 @@ func TestExample(t *testing.T) {
 		},
 	}
 	caps.AddChrome(chromeCaps)
-	wd, err := selenium.NewRemote(caps, fmt.Sprintf("http://127.0.0.1:%d/wd/hub", 4000))
+
+	host := fmt.Sprintf(
+		"http://127.0.0.1:%s/wd/hub",
+		os.Getenv("SELENIUM_PORT"),
+	)
+	if os.Getenv("ENV") == "testing" {
+		host = fmt.Sprintf("http://127.0.0.1:%s", os.Getenv("SELENIUM_PORT"))
+	}
+
+	wd, err := selenium.NewRemote(caps, host)
 	if err != nil {
 		panic(err)
 	}
@@ -38,11 +55,6 @@ func TestExample(t *testing.T) {
 	}
 
 	img, err := wd.Screenshot()
-	if err != nil {
-		panic(err)
-	}
-
-	currentDir, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}

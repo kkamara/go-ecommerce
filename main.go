@@ -38,7 +38,7 @@ func main() {
 				})
 			})
 
-			log.Fatal(webApp.Listen(":8080"))
+			log.Fatal(webApp.Listen(":" + os.Getenv("APP_PORT")))
 			return nil
 		},
 		Authors: []*cli.Author{{Name: "Kelvin Kamara", Email: "kelvinkamara@protonmail.com"}},
@@ -48,6 +48,11 @@ func main() {
 			Name:   "migrate",
 			Usage:  "run database migrations",
 			Action: commands.DbMigrate,
+		},
+		{
+			Name:   "download",
+			Usage:  "download test binaries",
+			Action: commands.DownloadTestBinaries,
 		},
 	}
 
