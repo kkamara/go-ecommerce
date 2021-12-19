@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -38,7 +39,11 @@ func main() {
 				})
 			})
 
-			log.Fatal(webApp.Listen(":" + os.Getenv("APP_PORT")))
+			port := os.Getenv("APP_PORT")
+			if len(port) < 1 {
+				return errors.New("Missing APP_PORT environment variable.")
+			}
+			log.Fatal(webApp.Listen(":" + port))
 			return nil
 		},
 		Authors: []*cli.Author{{Name: "Kelvin Kamara", Email: "kelvinkamara@protonmail.com"}},
