@@ -43,8 +43,6 @@ jobs:
         run: go run -mod=readonly main.go &
       - name: curl to localhost
         run: curl localhost:8000 &
-      - name: Make vendor directory
-        run: mkdir vendor/
       - name: Get test binaries
         run: go run -mod=readonly main.go download
       - name: Unzip test binaries

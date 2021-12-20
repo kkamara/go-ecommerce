@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 
@@ -15,23 +16,32 @@ func DownloadTestBinaries(c *cli.Context) error {
 
 	currentDir, err := os.Getwd()
 	if err != nil {
-		panic(err)
+		return err
 	}
-	out, err := os.Create(currentDir + "/vendor/chromedriver.zip")
+
+	path := currentDir + "/vendor"
+	if _, err = os.Stat(path); os.IsNotExist(err) {
+		err := os.Mkdir(path, fs.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
+
+	out, err := os.Create(path + "/chromedriver.zip")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer out.Close()
 
 	resp, err := http.Get(chromeDriver)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer resp.Body.Close()
 
 	_, err = io.Copy(out, resp.Body)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	fmt.Println("Successfully downloaded chrome driver.")

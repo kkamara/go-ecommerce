@@ -13,11 +13,11 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func DbMigrate(c *cli.Context) error {
+func DbMigrate(c *cli.Context) (err error) {
 	fmt.Print("test\n")
 	currentDir, err := os.Getwd()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	var (
@@ -34,11 +34,11 @@ func DbMigrate(c *cli.Context) error {
 		name,
 	))
 	if err != nil {
-		panic(err)
+		return err
 	}
 	driver, err := mysql.WithInstance(db, &mysql.Config{})
 	if err != nil {
-		panic(err)
+		return err
 	}
 	m, err := migrate.NewWithDatabaseInstance(
 		fmt.Sprintf("file://%s/database/migrations", currentDir),
@@ -46,10 +46,10 @@ func DbMigrate(c *cli.Context) error {
 		driver,
 	)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	m.Up()
 
-	return nil
+	return err
 }
