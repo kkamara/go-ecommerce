@@ -6,6 +6,6 @@ WORKDIR /app
 
 COPY . ./
 
-RUN go build -mod=readonly -o /ecommerce
+RUN go build -mod=mod -o /ecommerce
 
 CMD [ "/ecommerce" ]

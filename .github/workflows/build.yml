@@ -41,13 +41,13 @@ jobs:
             sed -i -e "s/development/testing/g" .env
       - name: Get test binaries
         run: |
-            go run -mod=readonly main.go download
+            go run -mod=mod main.go download
             unzip vendor/chromedriver.zip -d vendor/
       - name: Run web server
-        run: go run -mod=readonly main.go &
+        run: go run -mod=mod main.go &
       - name: curl to localhost
         run: curl localhost:8000
       - name: Start Chrome Driver
         run: vendor/chromedriver &
       - name: Run browser tests
-        run:  cd tests && go test -mod=readonly -v
+        run:  cd tests && go test -mod=mod -v
