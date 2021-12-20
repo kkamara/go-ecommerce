@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/kkamara/ecommerce/commands"
+	"github.com/kkamara/go-ecommerce/commands"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"

@@ -16,7 +16,7 @@ cp .env.example .env && docker-compose up --build -d
 cd tests/ && go test
 ```
 
-View browser test code: [/blob/develop/tests/main_test.go](https://github.com/kkamara/ecommerce/blob/develop/tests/main_test.go)
+View browser test code: [/blob/develop/tests/main_test.go](https://github.com/kkamara/go-ecommerce/blob/develop/tests/main_test.go)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

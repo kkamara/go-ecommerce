@@ -1,4 +1,4 @@
-module github.com/kkamara/ecommerce
+module github.com/kkamara/go-ecommerce
 
 go 1.17
 
