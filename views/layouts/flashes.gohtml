@@ -1,0 +1,20 @@
+{{define "flashes"}}
+
+    {{ if .FlashSuccess }}
+        <div class="alert alert-success text-center">
+            <div class="panel-heading">{{ .FlashSuccess }}</div>
+        </div>
+    {{end}}
+
+    {{ if .FlashWarning }}
+        <div class="alert alert-warning text-center">
+            <div class="panel-heading">{{ .FlashWarning }}</div>
+        </div>
+    {{end}}
+
+    {{ if .FlashDanger }}
+        <div class="alert alert-danger text-center">
+            <div class="panel-heading">{{ .FlashDanger }}</div>
+        </div>
+    {{end}}
+{{end}}

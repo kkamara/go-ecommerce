@@ -19,24 +19,31 @@ func main() {
 		Name:  "ecommerce",
 		Usage: "serve this app on the web",
 		Action: func(c *cli.Context) error {
-			engine := html.New("./views", ".html")
+			engine := html.New("./views", ".gohtml")
 
 			if os.Getenv("ENV") != "production" {
 				engine.Reload(true)
 				engine.Debug(true)
 			}
 
-			engine.AddFunc("appName", func(name string) string {
+			engine.AddFunc("appName", func() string {
 				return os.Getenv("APP_NAME")
+			})
+
+			engine.AddFunc("cartCount", func() string {
+				return "0"
 			})
 
 			webApp := fiber.New(fiber.Config{
 				Views: engine,
 			})
+
+			webApp.Static("/", "./resources")
+
 			webApp.Get("/", func(c *fiber.Ctx) error {
-				return c.Render("index", fiber.Map{
-					"Title": "Hello, World!",
-				})
+				return c.Render("product/index", fiber.Map{
+					"Title": "Home",
+				}, "layouts/master")
 			})
 
 			port := os.Getenv("APP_PORT")

@@ -1,0 +1,109 @@
+{{ define "navbar" }}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">{{ appName }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <div class="nav-item">
+                    <a 
+                        class="nav-link" 
+                        href="/products/?sort_by=pop"
+                        dusk="most-popular"
+                    >
+                        Most Popular
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a 
+                        class="nav-link" 
+                        href="/products/?sort_by=top'"
+                        dusk="top-rated"
+                    >
+                        Top Rated
+                    </a>
+                </div>
+            </ul>
+            <ul class="navbar-nav mr-auto">
+                <form class="form-inline my-2 my-lg-0" action='/' method='GET'>
+                    <input 
+                        name='query' 
+                        class="form-control mr-sm-2" 
+                        type="search" 
+                        placeholder="Find Your Product" 
+                        aria-label="Search"
+                        dusk="search-products-in"
+                    />
+                    <button 
+                        class="btn btn-outline-success my-2 my-sm-0" 
+                        type="submit"
+                        dusk="search-products-btn"
+                    >
+                        Search
+                    </button>
+                </form>
+            </ul>
+            <ul class="navbar-nav mr-right">
+                {{ if .Auth }}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            My Stuff
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/billing">Billing Cards</a>
+                            <a class="dropdown-item" href="/address">Addresses</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/orders">Order History</a>
+                            <div class="dropdown-divider"></div>
+                            {{ if .Auth and eq .Auth.Role "vendor" }}
+                                <a class="dropdown-item" href="/company/{{ .Auth.Company.Slug }}/products">Add a Product</a>
+                                <a class="dropdown-item" href="/company/{{ .Auth.Company.Slug }}/product">My Products</a>
+                            {{else}}
+                                {{ if .Auth and eq .Auth.Role "moderator" }}
+                                        <a class="dropdown-item" href="/modhub">Moderator's Hub</a>
+                                {{else}}
+                                    <a class="dropdown-item" href="/vendors/become">Become a vendor</a>
+                                {{end}}
+                            {{end}}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/account/settings">User Settings</a>
+                            <a class="dropdown-item" href="/account/logout">Logout</a>
+                        </div>
+                    </li>
+                {{else}}
+                    <li class="nav-item">
+                            <a class="nav-link" href="/account/register">
+                            <span>
+                                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                            </span>
+                            <span>Register</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                            <a class="nav-link" href="/account/login">
+                            <span>
+                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                            </span>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                {{end}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/cart">
+                        <span>
+                            <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                        </span>
+                        <span>Cart ({{ cartCount }})</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{{end}}
