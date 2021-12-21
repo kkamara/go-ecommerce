@@ -46,7 +46,7 @@ func main() {
 			})
 
 			port := os.Getenv("APP_PORT")
-			if port == "" {
+			if len(port) < 1 {
 				port = os.Getenv("PORT")
 				if port == "" {
 					port = "5000"
