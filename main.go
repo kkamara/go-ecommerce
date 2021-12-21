@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"os"
 
@@ -47,9 +46,13 @@ func main() {
 			})
 
 			port := os.Getenv("APP_PORT")
-			if len(port) < 1 {
-				return errors.New("Missing APP_PORT environment variable.")
+			if port == "" {
+				port = os.Getenv("PORT")
+				if port == "" {
+					port = "5000"
+				}
 			}
+
 			log.Fatal(webApp.Listen(":" + port))
 			return nil
 		},
