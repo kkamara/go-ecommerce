@@ -2,7 +2,7 @@
 .env
 script.sh
 vendor
-bin/
+bin/macapplication
 tmp/
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
