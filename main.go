@@ -51,6 +51,11 @@ func main() {
 				if result.Error != nil {
 					return result.Error
 				}
+				sqlDB, err := db.DB()
+				if err != nil {
+					return err
+				}
+				defer sqlDB.Close()
 				fmt.Printf("%+v", products)
 				return c.Render("product/index", fiber.Map{
 					"Title":    "Home",
@@ -87,10 +92,15 @@ func main() {
 			Usage: "test some stuff",
 			Action: func(c *cli.Context) error {
 				// do stuff
-				_, err := database.Open()
+				db, err := database.Open()
 				if err != nil {
 					return err
 				}
+				sqlDB, err := db.DB()
+				if err != nil {
+					return err
+				}
+				defer sqlDB.Close()
 
 				return nil
 			},
