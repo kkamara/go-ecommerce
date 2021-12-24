@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/kkamara/go-ecommerce/commands"
+	"github.com/kkamara/go-ecommerce/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
@@ -40,8 +42,19 @@ func main() {
 			webApp.Static("/", "./resources")
 
 			webApp.Get("/", func(c *fiber.Ctx) error {
+				db, err := database.Open()
+				if err != nil {
+					return err
+				}
+				products := []database.Product{}
+				result := db.Find(&products)
+				if result.Error != nil {
+					return result.Error
+				}
+				fmt.Printf("%+v", products)
 				return c.Render("product/index", fiber.Map{
-					"Title": "Home",
+					"Title":    "Home",
+					"Products": products,
 				}, "layouts/master")
 			})
 
@@ -68,6 +81,19 @@ func main() {
 			Name:   "download",
 			Usage:  "download test binaries",
 			Action: commands.DownloadTestBinaries,
+		},
+		{
+			Name:  "test",
+			Usage: "test some stuff",
+			Action: func(c *cli.Context) error {
+				// do stuff
+				_, err := database.Open()
+				if err != nil {
+					return err
+				}
+
+				return nil
+			},
 		},
 	}
 

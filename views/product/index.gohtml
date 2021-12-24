@@ -3,20 +3,20 @@
 
     {{ if .Products }}
         {{ range .Products }}
-            <a href="{{ .Path }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                 <img style='max-height:100px' src="{{ .ImagePath }}" class='img-responsive'>
                 <h5 class="mb-1">{{ .Name }}</h5>
                 <h3>
                     <strong>
-                        {{ .Formatted_cost }}
+                        {{ .Cost }}
                     </strong>
                 </h3>
                 </div>
                 <p class="mb-1">{{ .ShortDescription }}.</p>
-                <small>{{ .Company.Name }}.</small>
+                <small>Company Name</small>
                 <div class="float-right">
-                    Average Rating: {{ if .Review ne "0.00" }} {{ .Review }} {{else}} None {{end}}
+                    Average Rating: review
                 </div>
             </a>
         {{end}}

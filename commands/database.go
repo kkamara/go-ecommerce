@@ -13,6 +13,9 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+// enable tls support
+// https://stackoverflow.com/questions/42163732/how-to-use-the-go-mysql-driver-with-ssl-on-aws-with-a-mysql-rds-instance
+
 func DbMigrate(c *cli.Context) (err error) {
 	fmt.Print("test\n")
 	currentDir, err := os.Getwd()
