@@ -50,4 +50,4 @@ jobs:
       - name: Start Chrome Driver
         run: vendor/chromedriver &
       - name: Run browser tests
-        run:  cd tests && go test -mod=mod -v
+        run:  go test -mod=mod -v

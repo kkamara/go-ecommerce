@@ -85,7 +85,7 @@ func Open() (db *gorm.DB, err error) {
 		}
 		cmd := exec.Command(
 			"sed",
-			"-i -e",
+			"-i",
 			"s/MIGRATE_DB=true/MIGRATE_DB=false/g",
 			".env",
 		)
@@ -101,7 +101,7 @@ func Open() (db *gorm.DB, err error) {
 		}
 		cmd := exec.Command(
 			"sed",
-			"-i -e",
+			"-i",
 			"s/SEED_DB=true/SEED_DB=false/g",
 			".env",
 		)
